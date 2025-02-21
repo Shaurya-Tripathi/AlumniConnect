@@ -1,6 +1,6 @@
 'use client'
 import { useState, useMemo } from "react";
-import { PostStatus, GetStatus } from "@/app/api/firestoreAPI";
+import { PostStatus} from "@/app/api/(server-side)/firestoreAPI";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,6 +8,7 @@ import PostCard from "../PostCard/PostCard";
 import { getCurrentTimeStamp } from "@/hooks/useMoment";
 import { getUniqueID } from "@/lib/helpers";
 import { Key } from "lucide-react";
+import { GetStatus } from "@/app/api/(client-side)/firestoreAPI";
 
 function Feed({currentUser}) {
   const [open, setOpen] = useState(false);

@@ -7,9 +7,9 @@ export default function ProtectedLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen w-full bg-gray-950"> {/* Changed bg-gray-50 to bg-black */}
+    <div className="min-h-screen w-full bg-gray-950"> 
     <TopBar />
-      {children} {/* Removed container, padding and margin classes */}
+      {children}
     </div>
   );
 }

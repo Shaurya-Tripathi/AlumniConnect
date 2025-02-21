@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { signupApi } from '@/lib/auth';
 import { ToastContainer, toast } from 'react-toastify/unstyled';
 import { useRouter } from 'next/navigation';
-import { PostUserData } from '@/app/api/firestoreAPI';
+import { PostUserData } from '@/app/api/(server-side)/firestoreAPI';
 
 
 

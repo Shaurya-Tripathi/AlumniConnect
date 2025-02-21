@@ -5,7 +5,7 @@ import HomeComponent from '@/components/common/HomeComponent'
 import { onAuthStateChanged } from 'firebase/auth'
 import { auth } from '@/lib/firebase'
 import { useRouter } from 'next/navigation'
-import { GetCurrentUser } from '@/app/api/firestoreAPI'
+import { GetCurrentUser } from '@/app/api/(client-side)/firestoreAPI'
 
 export default function HomePage() {
     const router = useRouter()
