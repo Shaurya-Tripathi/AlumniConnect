@@ -26,13 +26,13 @@ const ProfileDrop = () => {
         <DropdownMenu open={open} onOpenChange={setOpen}>
             <DropdownMenuTrigger className="flex flex-col items-center hover:text-blue-400">
                 <User className="w-6 h-6" />
-                <span className="text-sm mt-1">Profile</span>
+                <span className="text-sm mt-1 ">Profile</span>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="bg-white shadow-lg rounded-md">
+            <DropdownMenuContent className="bg-zinc-900 shadow-lg rounded-md">
                 <DropdownMenuItem>
                     <Link 
                         href="/profile" 
-                        className="flex items-center gap-2 w-full"
+                        className="flex items-center gap-2 w-full text-blue-500"
                         onClick={handleProfileClick}
                     >
                         <User className="w-4 h-4" /> Profile
