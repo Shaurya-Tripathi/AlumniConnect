@@ -63,3 +63,13 @@ export const removeUserLink = async (linkID, userID) => {
         console.error("Error removing link:", error);
     }
 };
+
+export const updateUserBasicInfo = async(object, userID)=>{
+    try{
+        let userRef = collection(firestore,'users');
+        let userToEdit = doc(userRef, userID);
+        await updateDoc(userToEdit,object);
+    }catch(error){
+        console.error("Cannot update basic details: "+error);
+    }
+}
