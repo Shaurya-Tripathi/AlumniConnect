@@ -33,7 +33,6 @@ function Feed({currentUser}) {
     GetStatus(setAllStatus);
   }, []);
 
-  //console.log(allStatus);
 
   return (
     <div className="flex flex-col items-center w-full min-h-screen pt-4">

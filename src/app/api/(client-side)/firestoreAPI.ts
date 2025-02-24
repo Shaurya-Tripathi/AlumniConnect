@@ -49,3 +49,25 @@ export const GetCurrentUser = (setCurrentUser) => {
         unsubscribeAuth();
     };
 };
+
+export const getSingleStatus = (setAllStatus, id)=>{
+    const dbRef = collection(firestore, "posts");
+    const singlePostQuery = query(dbRef, where("userID" ,"==", id));
+    onSnapshot(singlePostQuery, (response)=>{
+        setAllStatus(response.docs.map((docs)=>{
+            return{...docs.data(), id: docs.id}
+        }));
+    });
+};
+
+export const getSingleUserById = (setCurrentUser, email)=>{
+    const dbRef = collection(firestore,'users');
+    const singleUserQuery = query(dbRef, where("email","==", email));
+    onSnapshot(singleUserQuery, (response)=>{
+        setCurrentUser(
+            response.docs.map((docs)=>{
+                return{...docs.data(), id: docs.id};
+            })[0]
+        );
+    });
+};
