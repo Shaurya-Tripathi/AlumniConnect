@@ -42,7 +42,7 @@ export default function ProfileCard({ currentUser }) {
     if (basicInfo.headline.trim()) updatedInfo.headline = basicInfo.headline;
 
     if (Object.keys(updatedInfo).length > 0) {
-      await updateUserBasicInfo(updatedInfo, currentUser.userId);
+      await updateUserBasicInfo(updatedInfo, currentUser?.userId);
       console.log("Update complete");
     }
     setEditHero(false);
@@ -102,14 +102,14 @@ export default function ProfileCard({ currentUser }) {
             <AvatarImage src="https://github.com/shadcn.png" />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
-          <p className='font-bold text-2xl'>{currentUser.name}</p>
+          <p className='font-bold text-2xl'>{currentUser?.name}</p>
           <p className='font-extralight -mt-2'>
-            {currentUser.city && currentUser.country
+            {currentUser?.city && currentUser?.country
               ? `${currentUser.city}, ${currentUser.country}`
               : "Location not provided"}
           </p>
           <p className="text-lg/6 font-semibold text-gray-300 text-center px-4">
-  {currentUser.headline ? currentUser.headline : "The user hasn't added a headline"}
+  {currentUser?.headline ? currentUser.headline : "The user hasn't added a headline"}
 </p>
         </div>
 

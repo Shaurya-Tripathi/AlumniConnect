@@ -13,7 +13,7 @@ export default function UserPosts({currentUser}) {
     <div className='flex justify-center w-full'>
       <div className="w-full md:w-7/12 mt-4 flex flex-col items-center gap-2">
         {allstatus.filter((item)=>{
-          return item.userEmail === currentUser.email
+          return item.userEmail === currentUser?.email
         }).slice().sort((a,b)=>new Date(b.timeStamp) - new Date(a.timeStamp)).map((posts) => (
           <PostCard key={posts.postID} posts={posts} />
         ))}

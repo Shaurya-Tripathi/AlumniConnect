@@ -6,6 +6,7 @@ import { signupApi } from '@/lib/auth';
 import { ToastContainer, toast } from 'react-toastify/unstyled';
 import { useRouter } from 'next/navigation';
 import { PostUserData } from '@/app/api/(server-side)/firestoreAPI';
+import { getUniqueID } from '@/lib/helpers';
 
 
 
@@ -21,7 +22,7 @@ export default function SignupComponent() {
     e.preventDefault();
     try {
       const res = await signupApi(credentials.email, credentials.password)
-      PostUserData({name:credentials.name,email:credentials.email});
+      PostUserData({name:credentials.name,email:credentials.email , userID:getUniqueID()});
       //Store email in localStorage
       if (typeof window !== "undefined" && res?.email) {
         localStorage.setItem("userEmail", res.email);

@@ -15,14 +15,15 @@ function Feed({currentUser}) {
   const [status, setStatus] = useState(""); 
   const [allStatus, setAllStatus] = useState([]);
 
-  const sendStatus = () => {
+  const sendStatus = (currentUser) => {
     let userEmail = localStorage.getItem('userEmail');
     let object = {
       status:status,
       timeStamp: getCurrentTimeStamp('LLL'),
       userEmail:userEmail,
       userName: currentUser.name,
-      postID:getUniqueID()
+      postID:getUniqueID(),
+      userID:currentUser.userID
     }
     PostStatus(object);
   };
@@ -60,7 +61,7 @@ function Feed({currentUser}) {
             className="hover:text-white hover:bg-blue-500"
             disabled={!status.trim()}
             onClick={() => {
-              sendStatus();
+              sendStatus(currentUser);
               setOpen(false);
               setStatus("");
             }}

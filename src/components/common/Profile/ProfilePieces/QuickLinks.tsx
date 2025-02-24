@@ -28,7 +28,7 @@ export default function QuickLinks({ currentUser }) {
                 linkID: getUniqueID()
             };
             try {
-                await updateUserWithLinks(object, currentUser.userId); 
+                await updateUserWithLinks(object, currentUser?.userId); 
                 setUrl("");
                  
             } catch (error) {
@@ -39,7 +39,7 @@ export default function QuickLinks({ currentUser }) {
     };
 
     const handleRemoveLink = (linkID) => {
-        removeUserLink(linkID, currentUser.userId);
+        removeUserLink(linkID, currentUser?.userId);
     };
 
     return (
