@@ -1,5 +1,5 @@
 'use client'
-import { useState, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { PostStatus} from "@/app/api/(server-side)/firestoreAPI";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -28,7 +28,7 @@ function Feed({currentUser}) {
   };
   console.log(getCurrentTimeStamp('LLL'));
 
-  useMemo(() => {
+  useEffect(() => {
     GetStatus(setAllStatus);
   }, []);
 
@@ -55,9 +55,9 @@ function Feed({currentUser}) {
           onChange={(e) => setStatus(e.target.value)}
         />
         <DialogFooter className="flex justify-end gap-2">
-          <Button className="text-black bg-white hover:bg-zinc-900 hover:text-white" onClick={() => setOpen(false)}>Cancel</Button>
+          <Button className="text-black bg-white hover:bg-red-500 hover:text-white" onClick={() => setOpen(false)}>Cancel</Button>
           <Button
-            className="hover:text-black hover:bg-white"
+            className="hover:text-white hover:bg-blue-500"
             disabled={!status.trim()}
             onClick={() => {
               sendStatus();
@@ -74,8 +74,8 @@ function Feed({currentUser}) {
 
   {/* Posts section */}
   <div className="w-7/12 mt-4 flex flex-col items-center gap-2">
-    {allStatus.map((posts) => (
-      <PostCard posts={posts}/>
+    {allStatus.slice().sort((a,b)=> new Date(b.timeStamp) - new Date(a.timeStamp)).map((posts) => (
+      <PostCard key={posts.postID} posts={posts}/>
     ))}
   </div>
 </div>

@@ -49,7 +49,7 @@ export default function ProfileCard({ currentUser }) {
   }
 
   return (
-    <div className="flex flex-row justify-start border bg-zinc-900 h-screen w-screen ml-5 overflow-hidden">
+    <div className="flex flex-row justify-start border bg-black h-screen w-screen ml-3 overflow-hidden">
       <div className='text-white h-auto w-2/5 flex flex-col gap-y-20'>
 
         {/* User Main profile */}
@@ -108,7 +108,7 @@ export default function ProfileCard({ currentUser }) {
               ? `${currentUser.city}, ${currentUser.country}`
               : "Location not provided"}
           </p>
-          <p className="text-lg font-semibold text-gray-300 text-center px-4">
+          <p className="text-lg/6 font-semibold text-gray-300 text-center px-4">
   {currentUser.headline ? currentUser.headline : "The user hasn't added a headline"}
 </p>
         </div>
@@ -123,20 +123,20 @@ export default function ProfileCard({ currentUser }) {
       </div>
 
       {/* Right side of the Screen */}
-      <div className='text-white border border-gray-600 h-auto w-full flex justify-center items-baseline m-6'>
+      <div className='text-white border border-gray-600 h-auto w-full flex justify-center items-baseline mt-6 mb-6 ml-3'>
         <div className='mt-4'>
           <Tabs defaultValue="experience" className="w-[800px]">
-            <TabsList className='bg-slate-800 p-2 text-gray'>
-              <TabsTrigger className='data-[state=active]:bg-zinc-800 data-[state=active]:text-white text-gray-500' value="experience">Experience</TabsTrigger>
-              <TabsTrigger className='data-[state=active]:bg-zinc-800 data-[state=active]:text-white text-gray-500' value="education">Education</TabsTrigger>
-              <TabsTrigger className='data-[state=active]:bg-zinc-800 data-[state=active]:text-white text-gray-500' value="posts">Posts</TabsTrigger>
-              <TabsTrigger className='data-[state=active]:bg-zinc-800 data-[state=active]:text-white text-gray-500' value="accomplishments">Accomplishments</TabsTrigger>
-              <TabsTrigger className='data-[state=active]:bg-zinc-800 data-[state=active]:text-white text-gray-500' value="skills">Skills</TabsTrigger>
-              <TabsTrigger className='data-[state=active]:bg-zinc-800 data-[state=active]:text-white text-gray-500' value="projects">Projects</TabsTrigger>
+            <TabsList className='bg-slate-800 p-2 text-gray flex justify-center'>
+              <TabsTrigger className='data-[state=active]:bg-blue-900 data-[state=active]:text-white text-gray-500' value="experience">Experience</TabsTrigger>
+              <TabsTrigger className='data-[state=active]:bg-blue-900 data-[state=active]:text-white text-gray-500' value="education">Education</TabsTrigger>
+              <TabsTrigger className='data-[state=active]:bg-blue-900 data-[state=active]:text-white text-gray-500' value="posts">Posts</TabsTrigger>
+              <TabsTrigger className='data-[state=active]:bg-blue-900 data-[state=active]:text-white text-gray-500' value="accomplishments">Accomplishments</TabsTrigger>
+              <TabsTrigger className='data-[state=active]:bg-blue-900 data-[state=active]:text-white text-gray-500' value="skills">Skills</TabsTrigger>
+              <TabsTrigger className='data-[state=active]:bg-blue-900 data-[state=active]:text-white text-gray-500' value="projects">Projects</TabsTrigger>
             </TabsList>
             <TabsContent value="experience"><Experience /></TabsContent>
             <TabsContent value="education"><Education /></TabsContent>
-            <TabsContent value="posts"><UserPosts /></TabsContent>
+            <TabsContent value="posts"><UserPosts currentUser={currentUser} /></TabsContent>
             <TabsContent value="accomplishments"><Accomplishments /></TabsContent>
             <TabsContent value="skills"><Skill /></TabsContent>
             <TabsContent value="projects"><Projects /></TabsContent>
