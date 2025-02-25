@@ -15,7 +15,7 @@ export default function HomePage() {
         const unsubscribe = GetCurrentUser(setCurrentUser);
         return () => unsubscribe && unsubscribe();
     }, []);
-    console.log(currentUser);
+
 
     React.useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {

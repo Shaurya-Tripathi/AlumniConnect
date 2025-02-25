@@ -1,7 +1,7 @@
 'use client'
 import { firestore } from "@/lib/firebase";
 import { getAuth, onAuthStateChanged, User } from "firebase/auth";
-import { collection, onSnapshot, query, where } from "firebase/firestore";
+import { collection, deleteDoc, doc, onSnapshot, query, setDoc, snapshotEqual, where } from "firebase/firestore";
 import { toast } from "react-toastify";
 
 export const GetStatus = (setAllStatus) => {
@@ -29,7 +29,7 @@ export const GetCurrentUser = (setCurrentUser) => {
         }
 
         const userQuery = query(
-            collection(firestore, "users"), 
+            collection(firestore, "users"),
             where("email", "==", user.email)
         );
 
@@ -50,24 +50,55 @@ export const GetCurrentUser = (setCurrentUser) => {
     };
 };
 
-export const getSingleStatus = (setAllStatus, id)=>{
+export const getSingleStatus = (setAllStatus, id) => {
     const dbRef = collection(firestore, "posts");
-    const singlePostQuery = query(dbRef, where("userID" ,"==", id));
-    onSnapshot(singlePostQuery, (response)=>{
-        setAllStatus(response.docs.map((docs)=>{
-            return{...docs.data(), id: docs.id}
+    const singlePostQuery = query(dbRef, where("userID", "==", id));
+    onSnapshot(singlePostQuery, (response) => {
+        setAllStatus(response.docs.map((docs) => {
+            return { ...docs.data(), id: docs.id }
         }));
     });
 };
 
-export const getSingleUserById = (setCurrentUser, email)=>{
-    const dbRef = collection(firestore,'users');
-    const singleUserQuery = query(dbRef, where("email","==", email));
-    onSnapshot(singleUserQuery, (response)=>{
+export const getSingleUserById = (setCurrentUser, email) => {
+    const dbRef = collection(firestore, 'users');
+    const singleUserQuery = query(dbRef, where("email", "==", email));
+    onSnapshot(singleUserQuery, (response) => {
         setCurrentUser(
-            response.docs.map((docs)=>{
-                return{...docs.data(), id: docs.id};
+            response.docs.map((docs) => {
+                return { ...docs.data(), id: docs.id };
             })[0]
         );
     });
 };
+
+export const likePost = (userId, postId, liked) => {
+    try {
+        let dbRef = collection(firestore, 'likes');
+        let docTolike = doc(dbRef, `${userId}_${postId}`)
+        if(liked){
+            deleteDoc(docTolike);
+        }else{
+            setDoc(docTolike, { userId, postId });
+        }
+    } catch (err) {
+        console.log("Can't like :",err);
+    }
+}
+
+export const getLikesByUser = (userId,postId,setLiked,setLikesCount)=>{
+    try {
+        let dbRef =  collection(firestore,'likes');
+        let likeQuerry = query(dbRef, where("postId","==",postId));
+        onSnapshot(likeQuerry,(snapshot)=>{
+            let likes = snapshot.docs.map((docs)=>docs.data());
+            let likesCount = likes.length;
+
+            const isLiked =  likes.some((like)=>like.userId === userId);
+            setLikesCount(likesCount);
+            setLiked(isLiked);
+        })
+    } catch (error) {
+        console.log("Cannot get like details: ",error);
+    }
+}
