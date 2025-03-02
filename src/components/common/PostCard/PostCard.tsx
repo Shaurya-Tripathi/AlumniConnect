@@ -17,7 +17,7 @@ export default function PostCard({ posts }) {
         <p className='text-gray-500'>{posts.timeStamp}</p>
       </div>
       <p className='text-gray-300 text-left font-sans text-base font-normal'>{posts.status}</p>
-      <LikeButton userId = {currentUser?.userId} postId = {posts.id}/>
+      <LikeButton userId = {currentUser?.userId} postId = {posts.id} currentUser = {currentUser}/>
     </div>
   );
 }

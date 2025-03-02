@@ -1,5 +1,6 @@
-import { firestore } from "@/lib/firebase";
+import { firestore, storage } from "@/lib/firebase";
 import { addDoc, arrayUnion, collection, doc, getDoc, updateDoc } from "firebase/firestore";
+import { ref, getDownloadURL, uploadBytesResumable  } from 'firebase/storage'
 
 export const PostStatus = async (object) => {
     try {
@@ -73,3 +74,44 @@ export const updateUserBasicInfo = async(object, userID)=>{
         console.error("Cannot update basic details: "+error);
     }
 }
+export const updateUserProfile = async (object, userID) => {
+    try { 
+        let userToEdit = doc(firestore, "users", userID); 
+        await updateDoc(userToEdit, object);
+        console.log('Success');
+    } catch (error) {
+        console.error("Cannot update profile: ", error);
+    }
+};
+
+export const uploadImage = async (file, userID) => {
+    const profilePicsRef = ref(storage, `profilePictures/${userID}-${Date.now()}-${file.name}`);
+    const uploadTask = uploadBytesResumable(profilePicsRef, file);
+
+    uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+            const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+            console.log(`Upload Progress: ${progress}%`);
+        },
+        (error) => {
+            console.error("Upload Error: ", error);
+        },
+        () => {
+            // Ensure correct async handling
+            getDownloadURL(uploadTask.snapshot.ref)
+                .then((downloadURL) => {
+                    console.log("File available at: ", downloadURL);
+                    return updateUserProfile({ pp: downloadURL }, userID);
+                })
+                .then(() => {
+                    console.log("Profile updated successfully");
+                })
+                .catch((error) => {
+                    console.error("Error updating profile: ", error);
+                });
+        }
+    );
+};
+
+

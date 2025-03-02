@@ -1,7 +1,7 @@
 'use client'
 import { firestore } from "@/lib/firebase";
 import { getAuth, onAuthStateChanged, User } from "firebase/auth";
-import { collection, deleteDoc, doc, onSnapshot, query, setDoc, snapshotEqual, where } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, onSnapshot, query, setDoc, snapshotEqual, where } from "firebase/firestore";
 import { toast } from "react-toastify";
 
 export const GetStatus = (setAllStatus) => {
@@ -100,5 +100,37 @@ export const getLikesByUser = (userId,postId,setLiked,setLikesCount)=>{
         })
     } catch (error) {
         console.log("Cannot get like details: ",error);
+    }
+}
+
+export const postComment = (postId, comment, timestamp,name)=>{
+    let dbRef = collection(firestore,"comments");
+
+    try{addDoc(dbRef,{
+        postId,
+        comment,
+        timestamp,
+        name
+
+    })}catch(err){
+        console.error("Comment Post failed: ",err);
+    }
+}
+
+export const getComments = (postId,setComments)=>{
+    let dbRef = collection(firestore,"comments");
+    try{
+        let singlePostQuery = query(dbRef,where('postId',"==",postId));
+        onSnapshot(singlePostQuery,(response)=>{
+            const comments = response.docs.map((doc)=>{
+                return{
+                    id: doc.id,
+                    ...doc.data()
+                }
+            })
+            setComments(comments);
+        })
+    }catch(error){
+        console.error("Can't fetch comments: ",error);
     }
 }
