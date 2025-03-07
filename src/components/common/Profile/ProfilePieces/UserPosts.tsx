@@ -1,12 +1,13 @@
-import { GetStatus } from '@/app/api/(client-side)/firestoreAPI';
+import { getAllUsers, GetStatus } from '@/app/api/(client-side)/firestoreAPI';
 import React, { useMemo, useState } from 'react';
 import PostCard from '../../PostCard/PostCard';
 
 export default function UserPosts({currentUser}) {
   const [allstatus, setAllstatus] = useState([]);
-
+  const [allUsers,setAllUsers] = useState([]);
   useMemo(() => {
     GetStatus(setAllstatus);
+    getAllUsers(setAllUsers)
   }, []);
 
   return (
@@ -15,7 +16,7 @@ export default function UserPosts({currentUser}) {
         {allstatus.filter((item)=>{
           return item.userEmail === currentUser?.email
         }).slice().sort((a,b)=>new Date(b.timeStamp) - new Date(a.timeStamp)).map((posts) => (
-          <PostCard key={posts.postID} posts={posts} />
+          <PostCard key={posts.postID} posts={posts} allUsers={allUsers} />
         ))}
       </div>
     </div>

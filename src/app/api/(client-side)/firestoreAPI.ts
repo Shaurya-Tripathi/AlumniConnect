@@ -19,6 +19,16 @@ export const GetStatus = (setAllStatus) => {
     return unsubscribe;
 };
 
+export const getAllUsers = (setAllUsers)=>{
+    const dbRef = collection(firestore,"users");
+    onSnapshot(dbRef,(response)=>{
+        setAllUsers(
+            response.docs.map((doc)=>{
+                return {...doc.data(), id: doc.id}; 
+        }))
+    });
+};  
+
 export const GetCurrentUser = (setCurrentUser) => {
     const auth = getAuth();
 

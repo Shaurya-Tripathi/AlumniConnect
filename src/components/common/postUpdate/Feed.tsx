@@ -10,10 +10,11 @@ import { getUniqueID } from "@/lib/helpers";
 import { Key } from "lucide-react";
 import { GetStatus } from "@/app/api/(client-side)/firestoreAPI";
 
-function Feed({currentUser}) {
+function Feed({currentUser,allUsers}) {
   const [open, setOpen] = useState(false);
   const [status, setStatus] = useState(""); 
   const [allStatus, setAllStatus] = useState([]);
+  // console.log(currentUser);
 
   const sendStatus = (currentUser) => {
     let userEmail = localStorage.getItem('userEmail');
@@ -23,7 +24,7 @@ function Feed({currentUser}) {
       userEmail:userEmail,
       userName: currentUser.name,
       postID:getUniqueID(),
-      userID:currentUser.userID
+      userID:currentUser.userId
     }
     PostStatus(object);
   };
@@ -75,7 +76,7 @@ function Feed({currentUser}) {
   {/* Posts section */}
   <div className="w-7/12 mt-4 flex flex-col items-center gap-2">
     {allStatus.slice().sort((a,b)=> new Date(b.timeStamp) - new Date(a.timeStamp)).map((posts) => (
-      <PostCard key={posts.postID} posts={posts}/>
+      <PostCard key={posts.postID} posts={posts} allUsers={allUsers}/>
     ))}
   </div>
 </div>

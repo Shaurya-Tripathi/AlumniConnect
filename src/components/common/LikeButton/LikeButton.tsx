@@ -84,7 +84,7 @@ export default function LikeButton({ userId, postId, currentUser }) {
                         Add comment
                     </Button>
                     {comments.length > 0 ? comments.map((comment) => (
-                        <div key={comment.id || comment.timestamp} className="text-white mt-8 bg-black p-3 rounded-2xl flex flex-row justify-between">
+                        <div key={comment.id || comment.timestamp} className="text-white mt-8 bg-slate-900 p-3 rounded-2xl flex flex-row justify-between">
                             <div><p className='text-gray-200'>{comment?.name}</p>
                             <p className='text-gray-300'>{comment?.comment}</p>
                             </div>

@@ -84,7 +84,7 @@ export const updateUserProfile = async (object, userID) => {
     }
 };
 
-export const uploadImage = async (file, userID) => {
+export const uploadImage = async (file, userID,setProgress,setCurrentImage) => {
     const profilePicsRef = ref(storage, `profilePictures/${userID}-${Date.now()}-${file.name}`);
     const uploadTask = uploadBytesResumable(profilePicsRef, file);
 
@@ -92,7 +92,7 @@ export const uploadImage = async (file, userID) => {
         "state_changed",
         (snapshot) => {
             const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-            console.log(`Upload Progress: ${progress}%`);
+            setProgress(progress);
         },
         (error) => {
             console.error("Upload Error: ", error);
@@ -102,6 +102,8 @@ export const uploadImage = async (file, userID) => {
             getDownloadURL(uploadTask.snapshot.ref)
                 .then((downloadURL) => {
                     console.log("File available at: ", downloadURL);
+                    setProgress(0);
+                    setCurrentImage('');
                     return updateUserProfile({ pp: downloadURL }, userID);
                 })
                 .then(() => {
