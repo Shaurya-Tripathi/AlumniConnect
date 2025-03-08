@@ -85,7 +85,7 @@ export default function QuickLinks({ currentUser }) {
     
                     {currentUser?.Links?.length > 0 ? (
                         <div className="mt-4 space-y-2 max-h-40 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-900 p-2">
-                            {currentUser.Links.map((link) => (
+                            {currentUser?.Links.map((link) => (
                                 <div key={link.linkID} className="flex items-center justify-between p-2 bg-gray-800 rounded-lg">
                                     <a href={link.url} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">
                                         {link.label}

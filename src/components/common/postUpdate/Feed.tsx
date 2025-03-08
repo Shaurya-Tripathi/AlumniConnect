@@ -9,6 +9,7 @@ import { getCurrentTimeStamp } from "@/hooks/useMoment";
 import { getUniqueID } from "@/lib/helpers";
 import { Key } from "lucide-react";
 import { GetStatus } from "@/app/api/(client-side)/firestoreAPI";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 function Feed({currentUser,allUsers}) {
   const [open, setOpen] = useState(false);
@@ -22,9 +23,9 @@ function Feed({currentUser,allUsers}) {
       status:status,
       timeStamp: getCurrentTimeStamp('LLL'),
       userEmail:userEmail,
-      userName: currentUser.name,
+      userName: currentUser?.name,
       postID:getUniqueID(),
-      userID:currentUser.userId
+      userID:currentUser?.userId
     }
     PostStatus(object);
   };
@@ -38,7 +39,11 @@ function Feed({currentUser,allUsers}) {
   return (
     <div className="flex flex-col items-center w-full min-h-screen pt-4">
   {/* Post creation box */}
-  <div className="bg-zinc-950 w-7/12 h-[15vh] flex justify-center items-center rounded-md border border-gray-600 p-4">
+  <div className="bg-zinc-950 w-7/12 h-[15vh] gap-5 flex justify-center items-center rounded-md border border-gray-600 p-4">
+  <Avatar className='h-[70px] w-[70px] object-contain'>
+                    <AvatarImage src={currentUser?.pp} />
+                    <AvatarFallback>User</AvatarFallback>
+                </Avatar>
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="rounded-2xl bg-blue-100 text-black hover:bg-blue-500 w-4/5" onClick={() => setOpen(true)}>

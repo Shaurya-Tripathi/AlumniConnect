@@ -30,7 +30,7 @@ export default function LikeButton({ userId, postId, currentUser }) {
     // console.log(currentUser.name);
     const addComment = () => {
         if(comment.length>0){
-            postComment(postId, comment, getCurrentTimeStamp('LLL'), currentUser.name);
+            postComment(postId, comment, getCurrentTimeStamp('LLL'), currentUser?.name);
         }
         
         setComment('');

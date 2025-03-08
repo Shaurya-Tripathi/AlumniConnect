@@ -1,5 +1,5 @@
 import { firestore, storage } from "@/lib/firebase";
-import { addDoc, arrayUnion, collection, doc, getDoc, updateDoc } from "firebase/firestore";
+import { addDoc, arrayUnion, collection, deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
 import { ref, getDownloadURL, uploadBytesResumable  } from 'firebase/storage'
 
 export const PostStatus = async (object) => {
@@ -12,6 +12,26 @@ export const PostStatus = async (object) => {
         return { success: false, error };
     }
 };
+
+export const updateStatus = async (postID, newContent) => {
+    try {
+        let postToUpdate = doc(firestore, "posts", postID);
+        await updateDoc(postToUpdate, { status: newContent });
+        console.log("Post updated successfully");
+    } catch (err) {
+        console.log("Can't update the post: ", err);
+    }
+};
+
+export const deleteStatus = async (postID) =>{
+    try{
+        const postRef = doc(firestore,"posts",postID);
+        await deleteDoc(postRef)
+        console.log("Post deleted Successfully");
+    }catch(err){
+        console.log("can't delete the post: ",err);
+    }
+} 
 
 export const PostUserData = async (object) => {
     try {

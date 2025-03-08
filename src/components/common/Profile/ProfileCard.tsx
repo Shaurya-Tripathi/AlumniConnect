@@ -125,11 +125,11 @@ export default function ProfileCard({ currentUser }) {
           <p className='font-bold text-2xl'>{currentUser?.name}</p>
           <p className='font-extralight -mt-2'>
             {currentUser?.city && currentUser?.country
-              ? `${currentUser.city}, ${currentUser.country}`
+              ? `${currentUser?.city}, ${currentUser?.country}`
               : "Location not provided"}
           </p>
           <p className="text-lg/6 font-semibold text-gray-300 text-center px-4">
-            {currentUser?.headline ? currentUser.headline : "The user hasn't added a headline"}
+            {currentUser?.headline ? currentUser?.headline : "The user hasn't added a headline"}
           </p>
         </div>
 
