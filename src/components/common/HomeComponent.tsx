@@ -6,7 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 const HomeComponent = ({ currentUser, allUsers }) => {
     return (
         <>
-            <div className='flex flex-col justify-center items-center mt-10'>
+            <div className='flex flex-col justify-center items-center pt-10 bg-black'>
                 <Avatar className='h-[100px] w-[100px] object-contain'>
                     <AvatarImage src={currentUser?.pp} />
                     <AvatarFallback>User</AvatarFallback>
