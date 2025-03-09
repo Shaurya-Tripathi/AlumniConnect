@@ -1,4 +1,5 @@
 'use client'
+import { Toast } from "@/components/ui/toast";
 import { firestore } from "@/lib/firebase";
 import { getAuth, onAuthStateChanged, User } from "firebase/auth";
 import { addDoc, collection, deleteDoc, doc, onSnapshot, query, setDoc, snapshotEqual, where } from "firebase/firestore";
@@ -96,6 +97,17 @@ export const likePost = (userId, postId, liked) => {
     }
 }
 
+export const AddConnection = (userId, targetId) => {
+    try {
+        let dbRef = collection(firestore, 'connections');
+        let connectionToAdd = doc(dbRef, `${userId}_${targetId}`)
+            setDoc(connectionToAdd, { userId, targetId })
+            console.log("Added succesfully")
+    } catch (err) {
+        console.log("Can't add user :",err);
+    }
+}
+
 export const getLikesByUser = (userId,postId,setLiked,setLikesCount)=>{
     try {
         let dbRef =  collection(firestore,'likes');
@@ -142,5 +154,21 @@ export const getComments = (postId,setComments)=>{
         })
     }catch(error){
         console.error("Can't fetch comments: ",error);
+    }
+}
+
+export const getConnections = (userID, targetID, setIsConnected)=>{
+    try {
+        let dbRef =  collection(firestore,'connections');
+        let connectionQuerry = query(dbRef, where("targetId","==",targetID));
+        onSnapshot(connectionQuerry,(snapshot)=>{
+            let connections = snapshot.docs.map((docs)=>docs.data());
+            let connectionCount = connections.length;
+
+            const isConnected =  connections.some((connection)=>connection.userId === userID);
+            setIsConnected(isConnected);
+        })
+    } catch (error) {
+        console.log("Cannot get connection details: ",error);
     }
 }
