@@ -2,7 +2,7 @@
 import { Toast } from "@/components/ui/toast";
 import { firestore } from "@/lib/firebase";
 import { getAuth, onAuthStateChanged, User } from "firebase/auth";
-import { addDoc, collection, deleteDoc, doc, onSnapshot, query, setDoc, snapshotEqual, where } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDocs, onSnapshot, query, setDoc, snapshotEqual, where } from "firebase/firestore";
 import { toast } from "react-toastify";
 
 export const GetStatus = (setAllStatus) => {
@@ -170,5 +170,28 @@ export const getConnections = (userID, targetID, setIsConnected)=>{
         })
     } catch (error) {
         console.log("Cannot get connection details: ",error);
+    }
+}
+
+export const removeConnection = async (userID, targetID) => {
+    try {
+        // Find the connection document
+        let dbRef = collection(firestore, 'connections');
+        let connectionQuery = query(
+            dbRef, 
+            where("userId", "==", userID),
+            where("targetId", "==", targetID)
+        );
+        
+        const snapshot = await getDocs(connectionQuery);
+        
+        // Delete the connection document
+        if (!snapshot.empty) {
+            snapshot.forEach(async (doc) => {
+                await deleteDoc(doc.ref);
+            });
+        }
+    } catch (error) {
+        console.log("Error removing connection:", error);
     }
 }
