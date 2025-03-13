@@ -8,6 +8,7 @@ import {
   export const loginApi = async (email: string, password: string) => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password)
+      console.log(userCredential);
       return userCredential.user
     } catch (error) {
       console.log('Login error', error)
@@ -17,7 +18,8 @@ import {
   
   export const signupApi = async (email: string, password: string) => {
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password)
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      console.log(userCredential);
       return userCredential.user
     } catch (error) {
       console.log('Signup error', error)
