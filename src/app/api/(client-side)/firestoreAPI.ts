@@ -156,7 +156,7 @@ export const getComments = (postId,setComments)=>{
         console.error("Can't fetch comments: ",error);
     }
 }
-
+ 
 export const getConnections = (userID, targetID, setIsConnected)=>{
     try {
         let dbRef =  collection(firestore,'connections');

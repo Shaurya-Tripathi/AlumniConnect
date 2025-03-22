@@ -2,20 +2,33 @@
 import { auth } from '@/lib/firebase'
 import { onAuthStateChanged } from 'firebase/auth'
 import { useRouter } from 'next/navigation'
-import React from 'react'
+import React, { useEffect } from 'react'
+import { GetCurrentUser, getAllUsers } from '@/app/api/(client-side)/firestoreAPI'
+import { useState } from 'react'
 
 function Page() {
-  const router = useRouter()
+  const router = useRouter();
+
+  const [currentUser, setCurrentUser] = useState(null);
+  const [allUsers,setAllUsers] = useState([]);
   
   React.useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        router.replace('/login')
-      }
-    })
+  const unsubscribe = onAuthStateChanged(auth, (user) => {
+    if (!user) {
+      router.replace('/login')
+    }
+  })
   
-    return () => unsubscribe()
+  return () => unsubscribe()
   }, [router])
+
+  useEffect(()=>{
+    GetCurrentUser(setCurrentUser);
+    getAllUsers(setAllUsers);
+  },[])
+
+  console.log(currentUser);
+  console.log(allUsers);
   
   return (
     <div className='text-white p-6'>
