@@ -4,9 +4,6 @@ import { cn } from "@/lib/utils";
 import { useParams, useRouter } from "next/navigation";
 import { UserAvatar } from "@/components/user-avatar";
 
-
-
-
 export const MessageMember = () => {
     const params = useParams();
     const router = useRouter();
