@@ -31,7 +31,7 @@ export const pushIntoDb = async (currentUser,allUsers) => {
     if(!profile){
         await db.user.create({
             data: {
-                id : currentUser?.id,
+                usrId : currentUser?.id,
                 name: `${currentUser?.name} `,
                 email: `${localStorage.getItem('userEmail')}`,
                 image: currentUser?.pp,
@@ -49,3 +49,6 @@ export const pushIntoDb = async (currentUser,allUsers) => {
         });
     }
 }
+
+
+// SAFE

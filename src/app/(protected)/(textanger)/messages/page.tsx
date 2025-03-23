@@ -39,7 +39,7 @@ function Page() {
         .then((data) => console.log("API Response:", data))
         .catch((err) => console.error("API Error:", err));
     }
-  }, [currentUser, allUsers]);
+  }, [currentUser]);
   
 
   return (
