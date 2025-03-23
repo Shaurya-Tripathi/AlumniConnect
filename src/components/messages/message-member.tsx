@@ -12,7 +12,7 @@ export const MessageMember = () => {
     const router = useRouter();
 
     const onClick = () => {
-        router.push(`/messages/${1234}`)
+        router.push(`/${params.userId}/messages/${1234}`)
     }
 
     return (

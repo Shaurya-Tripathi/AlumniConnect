@@ -2,6 +2,7 @@ import { ScrollArea } from "../ui/scroll-area"
 import { Separator } from "../ui/separator"
 import { MessageMember } from "./message-member"
 import { MessageSearch } from "./message-search"
+import { db } from "@/lib/db"
 
 export const MessageSidebar = () => {
     return (
