@@ -1,5 +1,6 @@
 import { ScrollArea } from "../ui/scroll-area"
 import { Separator } from "../ui/separator"
+import { MessageMember } from "./message-member"
 import { MessageSearch } from "./message-search"
 
 export const MessageSidebar = () => {
@@ -13,7 +14,7 @@ export const MessageSidebar = () => {
 
           <Separator className="bg-zinc-800 rounded-md my-2"/>
 
-          <div className="text-white">add members</div>
+          <MessageMember/>
         </ScrollArea>
 
       </div>
