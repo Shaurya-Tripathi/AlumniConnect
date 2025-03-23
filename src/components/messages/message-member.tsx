@@ -24,7 +24,7 @@ export const MessageMember = ({ target }: MessageMemberProps) => {
                 const userData = userDoc.data();
                 setUser({
                     name: userData.name || "Unknown User",
-                    avatar: userData.avatar || "", // Adjust based on Firestore structure
+                    avatar: userData.pp || "", // Adjust based on Firestore structure
                 });
             }
         };
@@ -40,16 +40,18 @@ export const MessageMember = ({ target }: MessageMemberProps) => {
         <button 
             onClick={onClick} 
             className={cn(
-                "group px-2 py-2 rounded-md flex items-center gap-x-2 w-full hover:bg-zinc-700/10 dark:hover:bg-zinc-700/50 transition mb-1"
+                "group px-2 py-2 rounded-md flex items-center gap-x-2 w-full hover:bg-zinc-700  transition mb-1"
             )}
         >
             <UserAvatar
                 src={user?.avatar || "/default-avatar.png"} // Provide a default avatar if empty
-                className="h-8 w-8 md:h-8 md:w-8"
+                className="h-10 w-10 md:h-10 md:w-10"
             />
             <p className={cn(
-                "font-semibold text-sm text-zinc-500 group-hover:text-zinc-600 dark:text-zinc-400 dark:group-hover:text-zinc-300 transition"
+                "font-semibold text-sm text-zinc-300 group-hover:text-zinc-500 transition"
             )}>
+
+
                 {user?.name || "Loading..."}
             </p>
         </button>
