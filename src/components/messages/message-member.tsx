@@ -4,12 +4,18 @@ import { cn } from "@/lib/utils";
 import { useParams, useRouter } from "next/navigation";
 import { UserAvatar } from "@/components/user-avatar";
 
-export const MessageMember = () => {
+interface MessageMemberProps {
+    target: string;
+}
+
+export const MessageMember = ({
+    target
+}: MessageMemberProps) => {
     const params = useParams();
     const router = useRouter();
 
     const onClick = () => {
-        router.push(`/${params.userId}/messages/${1234}`)
+        router.push(`/${params.userId}/messages/${target}`)
     }
 
     return (
@@ -23,7 +29,7 @@ export const MessageMember = () => {
             <p className={cn(
                 "font-semibold text-sm text-zinc-500 group-hover:text-zinc-600 dark:text-zinc-400 dark:group-hover:text-zinc-300 transition"
             )}>
-                {"supees"}
+                {target}
             </p>
         </button>
     )
