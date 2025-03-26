@@ -12,9 +12,9 @@ interface ChatHeaderMemberProps {
 }
 
 export const ChatHeaderMember = ({ target }: ChatHeaderMemberProps) => {
-    const params = useParams();
+    
     const router = useRouter();
-    const [user, setUser] = useState<{ name: string; avatar: string } | null>(null);
+    const [user, setUser] = useState<{ name: string; avatar: string; email: string, } | null>(null);
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -25,6 +25,7 @@ export const ChatHeaderMember = ({ target }: ChatHeaderMemberProps) => {
                 setUser({
                     name: userData.name || "Unknown User",
                     avatar: userData.pp || "",
+                    email: userData.email || "",
                 });
             }
         };
@@ -33,7 +34,7 @@ export const ChatHeaderMember = ({ target }: ChatHeaderMemberProps) => {
     }, [target]);
 
     const onClick = () => {
-        router.push(`/profile/${target}`);
+        router.push(`/profile/${target}?email=${user?.email}`);
     };
 
     return (
