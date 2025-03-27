@@ -1,8 +1,27 @@
 import { ChatHeader } from "@/components/chat/chat-header";
 import { ChatInput } from "@/components/chat/chat-input";
+import { getOrCreateConversation } from "@/lib/conversation";
+import { db } from "@/lib/db";
+import { redirect } from "next/navigation";
 
-const chatPage = async ({params}:{params:{targetId: string}}) => {
+interface ChatPageProps{
+    params: {
+        userId: string;
+        targetId: string;
+    }
+}
+
+const chatPage = async ({
+    params
+}: ChatPageProps) => {
     const awaitedParams = await params;
+
+    const conversation = await getOrCreateConversation(awaitedParams.userId, awaitedParams.targetId);
+
+    if(!conversation){
+        return redirect(`/${awaitedParams.userId}/messages`);
+    }
+
     return (
         <div className="bg-[#04060d] flex flex-col h-[calc(100vh-64px)]">
             <ChatHeader
