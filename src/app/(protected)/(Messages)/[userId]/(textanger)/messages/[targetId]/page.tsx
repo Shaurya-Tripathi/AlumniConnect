@@ -44,14 +44,15 @@ const chatPage = async ({
             <div className="p-4 bg-[#383a40]">
                 <ChatInput 
                 targetId={awaitedParams.targetId}
-                apiUrl="/api/socket/messages"
+                apiUrl="/api/socket/direct-messages"
                 query={{
-                    conversationId: conversation.id
+                    userId: awaitedParams.userId,
+                    conversationId: conversation.id 
                   }}
                 />
             </div>
         </div>
     )
 }
-
+ 
 export default chatPage;
