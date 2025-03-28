@@ -21,6 +21,7 @@ export const useChatQuery = ({
             url: apiUrl,
             query: {
               cursor: pageParam,
+              conversationId: paramValue, // Add conversationId to the query
             }
         },
         { skipNull: true });
@@ -36,7 +37,7 @@ export const useChatQuery = ({
         isFetchingNextPage,
         status,
     } = useInfiniteQuery({
-        queryKey: [queryKey],
+        queryKey: [queryKey, paramValue], // Include paramValue in queryKey
         queryFn: fetchMessages,
         initialPageParam: undefined,
         getNextPageParam: (lastPage) => lastPage?.nextCursor,

@@ -8,6 +8,7 @@ interface ChatMessagesProps{
     target: string;
     chatId: string;
     apiUrl: string;
+    paramKey: "conversationId";
     paramValue: string;
     socketUrl: string;
     socketQuery: Record<string, string>;
@@ -17,23 +18,24 @@ export const ChatMessages = ({
     target,
     chatId,
     apiUrl,
+    paramKey,
     paramValue,
     socketUrl,
     socketQuery
 }: ChatMessagesProps) => {
-    const queryKey = `chat:${chatId}`;
-    const addKey = `chat:${chatId}:messages`;
-
-    const {
-        data,
-        fetchNextPage,
-        isFetchingNextPage,
-        status,
-    } = useChatQuery({
-        queryKey,
-        apiUrl,
-        paramValue
-    });
+  const queryKey = `chat:${target}`;
+  const addKey = `chat:${target}:messages`;
+  
+  const {
+      data,
+      fetchNextPage,
+      isFetchingNextPage,
+      status,
+  } = useChatQuery({
+      queryKey,
+      apiUrl: "/api/direct-messages", // Adjust to match your API route
+      paramValue: paramValue // Use the conversation ID
+  });
 
     if (status === "pending"){ // loading is now changed to pending
         return (
