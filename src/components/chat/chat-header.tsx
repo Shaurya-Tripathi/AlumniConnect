@@ -3,6 +3,7 @@ import { MobileToggle } from "@/components/mobile-toggle";
 import { UserAvatar } from "@/components/user-avatar";
 import { ChatHeaderMember } from "./chat-header-profile";
 import { cn } from "@/lib/utils";
+import { SocketIndicator } from "../socket-indicator";
 
 interface ChatHeaderProps {
     target: string;
@@ -20,7 +21,7 @@ export const ChatHeader = ({
             </div>
             
             <div className="ml-auto flex items-center">
-                {/* <SocketIndicator/> */}
+                <SocketIndicator/>
             </div>
         </div>
     );

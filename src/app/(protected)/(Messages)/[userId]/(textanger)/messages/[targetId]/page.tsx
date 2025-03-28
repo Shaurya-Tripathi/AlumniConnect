@@ -1,5 +1,6 @@
 import { ChatHeader } from "@/components/chat/chat-header";
 import { ChatInput } from "@/components/chat/chat-input";
+import { ChatMessages } from "@/components/chat/chat-messages";
 import { getOrCreateConversation } from "@/lib/conversation";
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
@@ -19,6 +20,7 @@ const chatPage = async ({
     const conversation = await getOrCreateConversation(awaitedParams.userId, awaitedParams.targetId);
 
     if(!conversation){
+        // to create user model for users who have not used messages yet
         return redirect(`/${awaitedParams.userId}/messages`);
     }
 
@@ -27,9 +29,25 @@ const chatPage = async ({
             <ChatHeader
                 target={awaitedParams.targetId}
             />
-            <div className="flex-1 bg-[#040d1f] overflow-hidden text-gray-300">future messages</div>
+            <ChatMessages 
+                current={awaitedParams.userId}
+                target={awaitedParams.targetId}
+                chatId={conversation.id}
+                apiUrl="api/messages"
+                paramValue={conversation.id}
+                socketUrl="/api/socket/direct-messages"
+                socketQuery={{
+                    conversationId: conversation.id
+                }}
+            />
             <div className="p-4 bg-[#383a40]">
-                <ChatInput targetId={awaitedParams.targetId}/>
+                <ChatInput 
+                targetId={awaitedParams.targetId}
+                apiUrl="/api/socket/messages"
+                query={{
+                    conversationId: conversation.id
+                  }}
+                />
             </div>
         </div>
     )

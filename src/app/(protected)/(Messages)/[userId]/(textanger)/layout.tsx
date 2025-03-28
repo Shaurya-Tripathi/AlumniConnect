@@ -1,4 +1,6 @@
 import { MessageSidebar } from "@/components/messages/message-sidebar";
+import { QueryProvider } from "@/components/providers/query-provider";
+import { SocketProvider } from "@/components/providers/socket-provider";
 
 export default async function MessageLayout({
   children,
@@ -11,9 +13,13 @@ export default async function MessageLayout({
   return (
     <div className="h-full">
       <MessageSidebar userId={awaitedParams.userId} /> 
+      <SocketProvider>
+      <QueryProvider>
       <main className="h-full md:ml-[350px]">
         {children}
       </main>
+      </QueryProvider>
+      </SocketProvider>
     </div>
   );
 }
