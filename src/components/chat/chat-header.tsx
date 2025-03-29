@@ -4,6 +4,7 @@ import { UserAvatar } from "@/components/user-avatar";
 import { ChatHeaderMember } from "./chat-header-profile";
 import { cn } from "@/lib/utils";
 import { SocketIndicator } from "../socket-indicator";
+import { ChatVideoButton } from "./chat-video-button";
 
 interface ChatHeaderProps {
     target: string;
@@ -21,6 +22,7 @@ export const ChatHeader = ({
             </div>
             
             <div className="ml-auto flex items-center">
+                <ChatVideoButton/>
                 <SocketIndicator/>
             </div>
         </div>
