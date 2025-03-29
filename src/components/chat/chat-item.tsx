@@ -1,5 +1,8 @@
 'use client'
 
+import { useParams, useRouter } from "next/navigation";
+
+
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { cn } from "@/lib/utils";
@@ -94,12 +97,23 @@ export const ChatItem = ({
     //     };
     // }, [socketUrl, socketQuery, id]);
 
+    const router = useRouter();
+
+    const onClick = () => {
+        router.push(`/profile/${targetId}?email=${otherUser?.email}`);
+    };
+
     return (
         <div className="mb-4"> {/* Added margin-bottom for spacing between messages */}
             <div className={cn("flex items-end space-x-2", isCurrentUser ? "justify-end" : "justify-start")}>
                 {/* Avatar (Only for other users) */}
                 {!isCurrentUser && (
-                    <img src={otherUser?.avatar} alt="User Avatar" className="w-8 h-8 rounded-full" />
+                    <img
+                        onClick={onClick}
+                        src={otherUser?.avatar}
+                        alt="User Avatar"
+                        className="w-8 h-8 rounded-full transition-all duration-200 cursor-default hover:cursor-pointer hover:scale-110"
+                    />
                 )}
 
                 {/* Message Box */}
@@ -112,7 +126,12 @@ export const ChatItem = ({
                     )}
                 >
                     {/* Username (Optional) */}
-                    {!isCurrentUser && <p className="text-xs text-zinc-400 font-semibold italic">{otherUser?.name}</p>}
+                    {!isCurrentUser && <p
+                        onClick={onClick}
+                        className="text-xs text-zinc-400 font-semibold italic transition-all duration-200 cursor-default hover:cursor-pointer hover:scale-110 hover:text-zinc-100"
+                    >
+                        {otherUser?.name}
+                    </p>}
 
                     {/* Message */}
                     <p className="text-sm break-words">{message}</p>
