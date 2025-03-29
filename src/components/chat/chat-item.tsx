@@ -1,16 +1,14 @@
 'use client'
 
 import { useParams, useRouter } from "next/navigation";
-
-
 import { useEffect, useState } from "react";
-import { io } from "socket.io-client";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
 
 import { firestore } from "@/lib/firebase";
 import { doc, getDoc } from 'firebase/firestore';
 import { getUserById } from "@/lib/getUserById";
+
 interface ChatItemProps {
     id: string;
     currentId: string;
@@ -28,7 +26,6 @@ export const ChatItem = ({
     socketUrl,
     socketQuery
 }: ChatItemProps) => {
-
     const pathSegments = window.location.pathname.split("/");
     const userId = pathSegments[1];  // First segment after domain
     const targetId = pathSegments[3]; // Third segment (after "messages")
@@ -38,20 +35,31 @@ export const ChatItem = ({
 
     const [loggedUser, setLoggedUser] = useState<{ name: string; avatar: string; email: string, } | null>(null);
     const [otherUser, setOtherUser] = useState<{ name: string; avatar: string; email: string, } | null>(null);
+    
+    // Add loading state to prevent premature rendering decision
+    const [isLoading, setIsLoading] = useState(true);
+    const [isCurrentUser, setIsCurrentUser] = useState(false);
 
-    const [sanji, setSanji] = useState<string>("");
-
+    // First fetch the logged user ID and determine if current user
     useEffect(() => {
         const fetchUserId = async () => {
-            const id = await getUserById(userId);
-            if (id) setSanji(id);
+            try {
+                const id = await getUserById(userId);
+                if (id) {
+                    // Set current user determination here, after we have the ID
+                    setIsCurrentUser(id === currentId);
+                }
+                setIsLoading(false);
+            } catch (error) {
+                console.error("Error fetching user ID:", error);
+                setIsLoading(false);
+            }
         };
 
         fetchUserId();
-    }, [userId]);
+    }, [userId, currentId]);
 
-    const isCurrentUser = sanji === currentId;
-
+    // Then fetch the user details
     useEffect(() => {
         const fetchUsers = async () => {
             try {
@@ -85,26 +93,21 @@ export const ChatItem = ({
         fetchUsers();
     }, [userId, targetId]);
 
-    // useEffect(() => {
-    //     const socket = io(socketUrl, { query: socketQuery });
-    //     socket.on("message-update", (updatedMessage: { id: string; content: string }) => {
-    //         if (updatedMessage.id === id) {
-    //             setMessage(updatedMessage.content);
-    //         }
-    //     });
-    //     return () => {
-    //         socket.disconnect();
-    //     };
-    // }, [socketUrl, socketQuery, id]);
-
     const router = useRouter();
 
     const onClick = () => {
         router.push(`/profile/${targetId}?email=${otherUser?.email}`);
     };
 
+    // Don't render until we've determined if this is the current user
+    if (isLoading) {
+        return <div className="h-12 w-full flex items-center justify-center">
+            <div className="w-4 h-4 border-2 border-t-transparent border-blue-500 rounded-full animate-spin"></div>
+        </div>;
+    }
+
     return (
-        <div className="mb-4"> {/* Added margin-bottom for spacing between messages */}
+        <div className="mb-4">
             <div className={cn("flex items-end space-x-2", isCurrentUser ? "justify-end" : "justify-start")}>
                 {/* Avatar (Only for other users) */}
                 {!isCurrentUser && (
@@ -147,9 +150,4 @@ export const ChatItem = ({
             </div>
         </div>
     );
-
-
 }
-
-
-//safe
