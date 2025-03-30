@@ -46,7 +46,7 @@ export const MessageSidebar = async ({
 
           <div className="space-y-[2px]">
             {connectedIds.map((target) => (
-               <MessageMember target={target}/>
+               <MessageMember key={target} target={target}/>
             ))}
           </div>
 
