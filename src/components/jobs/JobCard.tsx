@@ -1,5 +1,5 @@
 import React from 'react';
-import { format } from 'date-fns';
+import { format, isAfter, differenceInDays, startOfDay } from 'date-fns';
 import Link from 'next/link';
 import { ExternalLink, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -25,13 +25,15 @@ const JobCard: React.FC<JobProps> = ({
   lastDate,
   onDelete,
 }) => {
-  // Calculate days remaining until last date
-  const currentDate = new Date();
-  const daysRemaining = Math.ceil(
-    (new Date(lastDate).getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24)
-  );
-
-  const isExpired = daysRemaining < 0;
+  // Convert strings to Date objects if needed and remove time component
+  const deadline = new Date(lastDate);
+  const today = startOfDay(new Date());
+  
+  // Calculate days remaining until last date (using date-fns for more reliable calculations)
+  const daysRemaining = differenceInDays(deadline, today);
+  
+  // Check if the deadline has passed
+  const isExpired = !isAfter(deadline, today);
 
   return (
     <div className={`rounded-lg shadow-md p-6 mb-4 border transition-shadow hover:shadow-lg ${isExpired ? 'bg-gray-800 border-gray-600' : 'bg-gray-700 border-gray-600'}`}>
@@ -60,7 +62,7 @@ const JobCard: React.FC<JobProps> = ({
               : `${daysRemaining} day${daysRemaining !== 1 ? 's' : ''} remaining`
           }
           <div className="text-gray-300 text-xs mt-1">
-            Deadline: {format(new Date(lastDate), 'MMM dd, yyyy')}
+            Deadline: {format(deadline, 'MMM dd, yyyy')}
           </div>
         </div>
         
@@ -76,12 +78,13 @@ const JobCard: React.FC<JobProps> = ({
             </Link>
           )}
           
+          {/* Only show delete button for expired jobs */}
           {isExpired && (
             <Button 
-            variant="destructive" 
-            size="icon"
-            onClick={() => onDelete(id)}
-            title="Delete job posting"
+              variant="destructive" 
+              size="icon"
+              onClick={() => onDelete(id)}
+              title="Delete job posting"
             >
               <Trash2 size={16} />
             </Button>
