@@ -16,7 +16,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Invalid request data: userId is missing" }, { status: 400 });
         }
 
-        // Query Firestore: Find all connections where userId === userId
+        // Query Firestore: Find all connections where userId === userId 
         const dbRef = collection(firestore, "connections");
         const connectionQuery = query(dbRef, where("userId", "==", userId));
         

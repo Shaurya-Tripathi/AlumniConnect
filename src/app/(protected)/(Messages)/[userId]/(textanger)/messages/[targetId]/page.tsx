@@ -3,6 +3,7 @@ import { ChatInput } from "@/components/chat/chat-input";
 import { ChatMessages } from "@/components/chat/chat-messages";
 import { MediaRoom } from "@/components/media-room";
 import { getOrCreateConversation } from "@/lib/conversation";
+import { getOrSetUser } from "@/lib/createUser";
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
 
@@ -22,10 +23,19 @@ const chatPage = async ({
 }: ChatPageProps) => {
     const awaitedParams = await params;
 
+    const conn = await getOrSetUser(awaitedParams.targetId);
+
     const conversation = await getOrCreateConversation(awaitedParams.userId, awaitedParams.targetId);
 
     if (!conversation) {
-        // to create user model for users who have not used messages yet
+        fetch("/api/pushUser", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userId: awaitedParams.targetId }), // Send only userId
+          })
+            .then((res) => res.json())
+            .then((data) => console.log("API Response:", data))
+            .catch((err) => console.error("API Error:", err));
         return redirect(`/${awaitedParams.userId}/messages`);
     }
 
