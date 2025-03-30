@@ -76,14 +76,16 @@ const JobCard: React.FC<JobProps> = ({
             </Link>
           )}
           
-          <Button 
+          {isExpired && (
+            <Button 
             variant="destructive" 
             size="icon"
             onClick={() => onDelete(id)}
             title="Delete job posting"
-          >
-            <Trash2 size={16} />
-          </Button>
+            >
+              <Trash2 size={16} />
+            </Button>
+          )}
         </div>
       </div>
     </div>

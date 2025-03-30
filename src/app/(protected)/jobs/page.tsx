@@ -147,7 +147,7 @@ function Page() {
   return (
     <div className="mx-auto px-0 py-8 w-full max-w-[1200px]">
       <div className="flex justify-between items-center mb-8 px-4">
-        <h1 className="text-2xl font-bold">Job Posts</h1>
+        <h1 className="text-2xl font-bold text-zinc-400">Offers</h1>
         <Button 
           className="bg-blue-600 hover:bg-blue-700"
           onClick={() => setIsDialogOpen(true)}
@@ -289,7 +289,7 @@ function Page() {
                 variant="outline" 
                 onClick={() => setIsDialogOpen(false)}
                 disabled={isSubmitting}
-                className="border-gray-600 text-white hover:bg-gray-700 hover:text-white"
+                className="border-gray-600 text-white bg-gray-700 hover:text-zinc-800"
               >
                 Cancel
               </Button>
