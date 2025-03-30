@@ -15,7 +15,7 @@ function Feed({currentUser,allUsers}) {
   const [open, setOpen] = useState(false);
   const [status, setStatus] = useState(""); 
   const [allStatus, setAllStatus] = useState([]);
-  // console.log(currentUser);
+  // console.log(currentUser); 
 
   const sendStatus = (currentUser) => {
     let userEmail = localStorage.getItem('userEmail');

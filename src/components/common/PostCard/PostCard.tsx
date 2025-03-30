@@ -58,7 +58,7 @@ export default function PostCard({ posts, allUsers }) {
               className="object-contain"
               src={allUsers?.find((item) => item.id === posts.userID)?.pp || ""}
             />
-            <AvatarFallback>CN</AvatarFallback>
+            <AvatarFallback className='text-black'>User</AvatarFallback>
           </Avatar>
 
           <p

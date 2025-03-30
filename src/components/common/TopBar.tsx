@@ -11,8 +11,18 @@ import {
 } from "lucide-react";
 import ProfileDrop from "./ProfileDrop";
 
+import { useState, useEffect } from "react";
+
+import { GetCurrentUser } from "@/app/api/(client-side)/firestoreAPI";
+
+
 const TopBar = () => {
   const pathname = usePathname(); // Get current route
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+      GetCurrentUser(setCurrentUser);
+    }, []);
 
   return (
     <>
@@ -26,7 +36,7 @@ const TopBar = () => {
           <NavItem href="/home" icon={<Home className="w-6 h-6" />} label="Home" active={pathname === "/home"} />
           <NavItem href="/network" icon={<Users className="w-6 h-6" />} label="Network" active={pathname === "/network"} />
           <NavItem href="/jobs" icon={<Briefcase className="w-6 h-6" />} label="Jobs" active={pathname === "/jobs"} />
-          <NavItem href="/messages" icon={<MessageSquare className="w-6 h-6" />} label="Messages" active={pathname === "/messages"} />
+          <NavItem href={`/${currentUser?.userId}/messages`} icon={<MessageSquare className="w-6 h-6" />} label="Messages" active={pathname === "/messages"} />
           <NavItem href="/notifications" icon={<Bell className="w-6 h-6" />} label="Notifications" active={pathname === "/notifications"} />
           <ProfileDrop />
         </div>
