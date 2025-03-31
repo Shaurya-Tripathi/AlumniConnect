@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { MessageSquareMore, ThumbsUp } from 'lucide-react';
+import { MessageSquareMore, ThumbsUp, Smile } from 'lucide-react';
 import { getComments, getLikesByUser, likePost, postComment } from '@/app/api/(client-side)/firestoreAPI';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { getCurrentTimeStamp } from '@/hooks/useMoment';
+import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
+import Picker from '@emoji-mart/react';
+import data from '@emoji-mart/data';
+import { useTheme } from 'next-themes';
 
 export default function LikeButton({ userId, postId, currentUser }) {
     const [likesCount, setLikesCount] = useState(0);
@@ -11,6 +15,7 @@ export default function LikeButton({ userId, postId, currentUser }) {
     const [showCommentBox, setShowCommentBox] = useState(false);
     const [comment, setComment] = useState('');
     const [comments, setComments] = useState([]);
+    const { resolvedTheme } = useTheme();
 
     useEffect(() => {
         getLikesByUser(userId, postId, setLiked, setLikesCount);
@@ -26,15 +31,17 @@ export default function LikeButton({ userId, postId, currentUser }) {
     const getComment = (e) => {
         setComment(e.target.value);
     }
-    // console.log(comment)
-    // console.log(currentUser.name);
+
+    const handleEmojiSelect = (emoji) => {
+        setComment(prev => prev + emoji);
+    }
+
     const addComment = () => {
         if(comment.length>0){
             postComment(postId, comment, getCurrentTimeStamp('LLL'), currentUser?.name);
         }
         
         setComment('');
-
     }
 
     return (
@@ -72,21 +79,42 @@ export default function LikeButton({ userId, postId, currentUser }) {
             {/* Comment Box */}
             {showCommentBox && (
                 <div className="mt-2">
-                    <Input
-                        onChange={getComment}
-                        className="text-[14px] font-light h-10 pl-2 rounded-2xl text-white focus:border focus:border-blue-300"
-                        placeholder="Add a comment"
-                        name="comment"
-                        value={comment}
-                    />
+                    <div className="relative flex items-center">
+                        <Input
+                            onChange={getComment}
+                            className="text-[14px] font-light h-10 pl-2 pr-10 rounded-2xl text-white focus:border focus:border-blue-300"
+                            placeholder="Add a comment"
+                            name="comment"
+                            value={comment}
+                        />
+                        <div className="absolute right-3">
+                            <Popover>
+                                <PopoverTrigger>
+                                    <Smile className="h-5 w-5 text-zinc-500 dark:text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 transition cursor-pointer" />
+                                </PopoverTrigger>
+                                <PopoverContent 
+                                    side="top" 
+                                    sideOffset={5} 
+                                    className="bg-transparent border-none shadow-none drop-shadow-none"
+                                >
+                                    <Picker
+                                        theme={resolvedTheme}
+                                        data={data}
+                                        onEmojiSelect={(emoji) => handleEmojiSelect(emoji.native)}
+                                    />
+                                </PopoverContent>
+                            </Popover>
+                        </div>
+                    </div>
                     <Button className="w-32 rounded-xl mt-4 bg-white text-black cursor-pointer hover:bg-blue-500 hover:text-white"
                         onClick={addComment}>
                         Add comment
                     </Button>
                     {comments.length > 0 ? comments.map((comment) => (
                         <div key={comment.id || comment.timestamp} className="text-white mt-8 bg-slate-900 p-3 rounded-2xl flex flex-row justify-between">
-                            <div><p className='text-gray-200'>{comment?.name}</p>
-                            <p className='text-gray-300'>{comment?.comment}</p>
+                            <div>
+                                <p className='text-gray-200'>{comment?.name}</p>
+                                <p className='text-gray-300'>{comment?.comment}</p>
                             </div>
 
                             <div>
