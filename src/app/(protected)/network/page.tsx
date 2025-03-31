@@ -5,33 +5,32 @@ import { onAuthStateChanged } from 'firebase/auth'
 import { useRouter } from 'next/navigation'
 import ConnectionComponent from '@/components/connections/ConnectionComponent'
 import { GetCurrentUser } from '@/app/api/(client-side)/firestoreAPI'
+import { Button } from '@/components/ui/button' // Assuming you're using shadcn/ui
 
-
-function page() {
+function Page() {
   const [currentUser, setCurrentUser] = useState(null);
-  const router = useRouter()
-      useEffect(() => {
-              const unsubscribe = GetCurrentUser(setCurrentUser);
-              return () => unsubscribe && unsubscribe();
-              
-          }, []);
-        // console.log(currentUser);  
+  const router = useRouter();
 
-      React.useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
-          if (!user) {
-            router.replace('/login')
-          }
-        })
+  useEffect(() => {
+    const unsubscribe = GetCurrentUser(setCurrentUser);
+    return () => unsubscribe && unsubscribe();
+  }, []);
 
-        return () => unsubscribe()
-      }, [router])
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        router.replace('/login');
+      }
+    });
 
-
+    return () => unsubscribe();
+  }, [router]);
 
   return (
-    <ConnectionComponent currentUser = {currentUser}  />
-  )
+    <div className="p-4">
+      <ConnectionComponent currentUser={currentUser} />
+    </div>
+  );
 }
 
-export default page
+export default Page;

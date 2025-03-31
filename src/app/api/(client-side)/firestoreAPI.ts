@@ -195,3 +195,4 @@ export const removeConnection = async (userID, targetID) => {
         console.log("Error removing connection:", error);
     }
 }
+
