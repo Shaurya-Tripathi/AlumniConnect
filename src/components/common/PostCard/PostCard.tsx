@@ -16,6 +16,7 @@ export default function PostCard({ posts, allUsers }) {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [newPostContent, setNewPostContent] = useState(posts.status);
   const [isConnected, setIsConnected] = useState(false);
+  const [mediaExpanded, setMediaExpanded] = useState(false);
 
   const router = useRouter();
 
@@ -37,7 +38,8 @@ export default function PostCard({ posts, allUsers }) {
 
   const confirmUpdate = async () => {
     if (newPostContent.length > 1) {
-      await updateStatus(posts.id, newPostContent);
+      // Keep the mediaUrl and mediaType when updating status
+      await updateStatus(posts.id, newPostContent, posts.mediaUrl, posts.mediaType);
       setEditDialogOpen(false);
     }
   };
@@ -45,6 +47,10 @@ export default function PostCard({ posts, allUsers }) {
   const confirmDelete = () => {
     deleteStatus(posts.id);
     setDeleteDialogOpen(false);
+  };
+
+  const toggleMediaExpansion = () => {
+    setMediaExpanded(!mediaExpanded);
   };
 
   return (
@@ -91,9 +97,44 @@ export default function PostCard({ posts, allUsers }) {
       </div>
 
       {/* Post Content */}
-      <p className="text-gray-300 text-left font-sans text-base font-normal mt-4 mb-4">
+      <p className="text-gray-300 text-left font-sans text-base font-normal mt-4 mb-2">
         {posts.status}
       </p>
+
+      {/* Media Content - LinkedIn Style Fixed Dimensions */}
+      {posts.mediaUrl && (
+        <div className="w-full flex justify-center mb-4">
+          <div 
+            className={`relative ${mediaExpanded ? "fixed inset-0 z-50 bg-black bg-opacity-90 flex items-center justify-center p-4" : "w-full h-80"}`}
+            onClick={toggleMediaExpansion}
+          >
+            {posts.mediaType === 'image' ? (
+              <img
+                src={posts.mediaUrl}
+                alt="Post image"
+                className={`${mediaExpanded ? "max-h-screen max-w-full" : "w-full h-full"} object-contain rounded-md cursor-pointer`}
+              />
+            ) : (
+              <video
+                src={posts.mediaUrl}
+                controls
+                className={`${mediaExpanded ? "max-h-screen max-w-full" : "w-full h-full"} object-contain rounded-md cursor-pointer`}
+              />
+            )}
+            {mediaExpanded && (
+              <button 
+                className="absolute top-4 right-4 bg-gray-800 text-white rounded-full w-8 h-8 flex items-center justify-center"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setMediaExpanded(false);
+                }}
+              >
+                ✕
+              </button>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Like Button */}
       <LikeButton userId={currentUser?.userId} postId={posts.id} currentUser={currentUser} />
@@ -105,14 +146,30 @@ export default function PostCard({ posts, allUsers }) {
             <DialogTitle className='text-white'>Edit Post</DialogTitle>
           </DialogHeader>
           <Input className='text-white' value={newPostContent} onChange={(e) => setNewPostContent(e.target.value)} />
+          
+          {/* Show media preview in edit dialog if it exists */}
+          {posts.mediaUrl && (
+            <div className="mt-2">
+              {posts.mediaType === 'image' ? (
+                <img src={posts.mediaUrl} alt="Post image" className="max-h-40 rounded-md" />
+              ) : (
+                <video src={posts.mediaUrl} className="max-h-40 rounded-md" controls />
+              )}
+              <p className="text-xs text-gray-400 mt-1">Media will be preserved when updating</p>
+            </div>
+          )}
+          
           <DialogFooter>
             <Button className='bg-white text-black hover:bg-red-500 hover:text-white' 
-              disabled={newPostContent.length < 1} 
               onClick={() => setEditDialogOpen(false)}
             >
               Cancel
             </Button>
-            <Button onClick={confirmUpdate} className="bg-black hover:bg-blue-500 text-white">
+            <Button 
+              onClick={confirmUpdate} 
+              className="bg-black hover:bg-blue-500 text-white"
+              disabled={newPostContent.length < 1}
+            >
               Update
             </Button>
           </DialogFooter>

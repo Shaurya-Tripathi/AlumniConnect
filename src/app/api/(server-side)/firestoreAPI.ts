@@ -1,11 +1,18 @@
 import { firestore, storage } from "@/lib/firebase";
 import { addDoc, arrayUnion, collection, deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
-import { ref, getDownloadURL, uploadBytesResumable  } from 'firebase/storage'
+import { ref, getDownloadURL, uploadBytesResumable } from 'firebase/storage'
 
 export const PostStatus = async (object) => {
     try {
         const dbRef = collection(firestore, "posts");
-        const result = await addDoc(dbRef, object);
+        // Make sure we include all media-related fields
+        const postData = {
+            ...object,
+            mediaUrl: object.mediaUrl || null,
+            mediaType: object.mediaType || null,
+            likes: [] // Initialize likes array
+        };
+        const result = await addDoc(dbRef, postData);
         return { success: true, id: result.id };
     } catch (error) {
         console.error("Error posting status:", error);
@@ -13,10 +20,17 @@ export const PostStatus = async (object) => {
     }
 };
 
-export const updateStatus = async (postID, newContent) => {
+export const updateStatus = async (postID, newContent, mediaUrl = null, mediaType = null) => {
     try {
         let postToUpdate = doc(firestore, "posts", postID);
-        await updateDoc(postToUpdate, { status: newContent });
+        // Include media fields in update if they exist
+        const updateData = { 
+            status: newContent,
+            // Only include media fields if they exist
+            ...(mediaUrl && { mediaUrl }),
+            ...(mediaType && { mediaType })
+        };
+        await updateDoc(postToUpdate, updateData);
         console.log("Post updated successfully");
     } catch (err) {
         console.log("Can't update the post: ", err);
@@ -94,6 +108,7 @@ export const updateUserBasicInfo = async(object, userID)=>{
         console.error("Cannot update basic details: "+error);
     }
 }
+
 export const updateUserProfile = async (object, userID) => {
     try { 
         let userToEdit = doc(firestore, "users", userID); 
@@ -104,36 +119,46 @@ export const updateUserProfile = async (object, userID) => {
     }
 };
 
-export const uploadImage = async (file, userID,setProgress,setCurrentImage) => {
-    const profilePicsRef = ref(storage, `profilePictures/${userID}-${Date.now()}-${file.name}`);
-    const uploadTask = uploadBytesResumable(profilePicsRef, file);
+export const uploadImage = async (file, userID, setProgress, setCurrentImage, isPostMedia = false) => {
+    // Different path for posts vs profile pictures
+    const storagePath = isPostMedia 
+      ? `postMedia/${userID}-${Date.now()}-${file.name}`
+      : `profilePictures/${userID}-${Date.now()}-${file.name}`;
+      
+    const storageRef = ref(storage, storagePath);
+    const uploadTask = uploadBytesResumable(storageRef, file);
 
-    uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-            const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-            setProgress(progress);
-        },
-        (error) => {
-            console.error("Upload Error: ", error);
-        },
-        () => {
-            // Ensure correct async handling
-            getDownloadURL(uploadTask.snapshot.ref)
-                .then((downloadURL) => {
-                    console.log("File available at: ", downloadURL);
-                    setProgress(0);
-                    setCurrentImage('');
-                    return updateUserProfile({ pp: downloadURL }, userID);
-                })
-                .then(() => {
-                    console.log("Profile updated successfully");
-                })
-                .catch((error) => {
-                    console.error("Error updating profile: ", error);
-                });
-        }
-    );
+    return new Promise((resolve, reject) => {
+        uploadTask.on(
+            "state_changed",
+            (snapshot) => {
+                const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                if (setProgress) setProgress(progress);
+            },
+            (error) => {
+                console.error("Upload Error: ", error);
+                reject(error);
+            },
+            () => {
+                getDownloadURL(uploadTask.snapshot.ref)
+                    .then((downloadURL) => {
+                        console.log("File available at:", downloadURL);
+                        
+                        if (!isPostMedia && setProgress && setCurrentImage) {
+                            // For profile picture uploads
+                            setProgress(0);
+                            setCurrentImage('');
+                            updateUserProfile({ pp: downloadURL }, userID)
+                                .then(() => console.log("Profile updated successfully"));
+                        }
+                        
+                        resolve(downloadURL);
+                    })
+                    .catch((error) => {
+                        console.error("Error getting download URL:", error);
+                        reject(error);
+                    });
+            }
+        );
+    });
 };
-
-
