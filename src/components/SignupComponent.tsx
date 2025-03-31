@@ -1,29 +1,41 @@
-'use client'
-
-import React, { FormEvent, useState } from 'react'
-import Link from 'next/link'
+import React, { FormEvent, useEffect, useState } from 'react';
+import Link from 'next/link';
 import { signupApi } from '@/lib/auth';
 import { ToastContainer, toast } from 'react-toastify/unstyled';
 import { useRouter } from 'next/navigation';
 import { PostUserData } from '@/app/api/(server-side)/firestoreAPI';
 import { getUniqueID } from '@/lib/helpers';
 
-
-
 export default function SignupComponent() {
   const router = useRouter();
   const [credentials, setCredentials] = useState({
-    name:'',
+    name: '',
     email: '',
+    branchInfo: '',
     password: ''
   });
+
+  useEffect(() => {
+    const storedUserData = localStorage.getItem('userData');
+    if (storedUserData) {
+      const userData = JSON.parse(storedUserData);
+      // Ensure all fields are set correctly, including password
+      setCredentials(prevCredentials => ({
+        ...prevCredentials, // Keep the existing password value
+        name: userData.username || '',
+        email: userData.email || '',
+        branchInfo: userData.branchInfo || '',
+      }));
+    }
+  }, []);
 
   const signup = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const res = await signupApi(credentials.email, credentials.password)
-      PostUserData({name:credentials.name,email:credentials.email , userID:getUniqueID()});
-      //Store email in localStorage
+      const res = await signupApi(credentials.email, credentials.password);
+      PostUserData({ name: credentials.name, email: credentials.email, branchInfo:credentials.branchInfo ,userID: getUniqueID() });
+      localStorage.removeItem('userData');
+
       if (typeof window !== "undefined" && res?.email) {
         localStorage.setItem("userEmail", res.email);
       } else if (typeof window !== "undefined" && res?.reloadUserInfo?.email) {
@@ -42,8 +54,6 @@ export default function SignupComponent() {
       setTimeout(() => {
         router.replace('/home');
       }, 4000);
-
-
     } catch (error) {
       toast.error("Registration failed. Please check your credentials", {
         position: "top-right",
@@ -53,11 +63,10 @@ export default function SignupComponent() {
         pauseOnHover: true,
         draggable: true,
         progress: undefined
-      })
-      console.log(`Login failed ${error}`)
+      });
+      console.log(`Login failed ${error}`);
     }
-  }
-
+  };
 
   return (
     <div className='bg-black h-screen w-full flex flex-col justify-center items-center'>
@@ -76,23 +85,31 @@ export default function SignupComponent() {
       <div className='mb-8'>
         <h1 className='text-4xl font-bold font-serif text-white'>Register</h1>
       </div>
-      <form className='bg-gray-800 p-8 rounded-lg shadow-xl w-96 flex flex-col space-y-6 border border-gray-700'
-        onSubmit={signup}>
+      <form className='bg-gray-800 p-8 rounded-lg shadow-xl w-96 flex flex-col space-y-6 border border-gray-700' onSubmit={signup}>
         <div className='flex flex-col'>
-          <label className="text-lg font-medium mb-2 text-gray-300" htmlFor='name'>Name</label>
-
-          <input onChange={(e) => setCredentials({ ...credentials, name: e.target.value })}
+          <label className="text-lg font-medium mb-2 text-gray-300" htmlFor='name'>User Name</label>
+          <input value={credentials.name} onChange={(e) => setCredentials({ ...credentials, name: e.target.value })}
             placeholder='Enter your Name'
             type="text" name="name"
+            readOnly
             className='bg-gray-900 text-white px-4 py-2 rounded-md border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500'
           />
         </div>
         <div className='flex flex-col'>
           <label className="text-lg font-medium mb-2 text-gray-300" htmlFor='email'>Email</label>
-
-          <input onChange={(e) => setCredentials({ ...credentials, email: e.target.value })}
+          <input value={credentials.email} onChange={(e) => setCredentials({ ...credentials, email: e.target.value })}
             placeholder='Enter your email'
             type="email" name="email"
+            readOnly
+            className='bg-gray-900 text-white px-4 py-2 rounded-md border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500'
+          />
+        </div>
+        <div className='flex flex-col'>
+          <label className="text-lg font-medium mb-2 text-gray-300" htmlFor='branchInfo'>Batch Details</label>
+          <input value={credentials.branchInfo} onChange={(e) => setCredentials({ ...credentials, branchInfo: e.target.value })}
+            placeholder='Ex: CSE25'
+            readOnly
+            type="text" name="branchInfo"
             className='bg-gray-900 text-white px-4 py-2 rounded-md border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500'
           />
         </div>
@@ -100,7 +117,7 @@ export default function SignupComponent() {
           <label className="text-lg font-medium mb-2 text-gray-300" htmlFor='password'>Password</label>
           <input
             onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
-            placeholder='Enter your password'
+            placeholder='Please remember your password'
             type="password"
             name="password"
             className='bg-gray-900 text-white px-4 py-2 rounded-md border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500' />
@@ -113,5 +130,5 @@ export default function SignupComponent() {
         </span>
       </p>
     </div>
-  )
+  );
 }

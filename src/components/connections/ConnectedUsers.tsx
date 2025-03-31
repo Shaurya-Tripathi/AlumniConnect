@@ -24,6 +24,7 @@ function ConnectedUsers({ user, currentUser, getCurrentUser, handleDisconnect })
 
         <div className="text-center">
           <p className="text-lg font-semibold text-gray-200">{user?.name}</p>
+          <p className="text-lg font-light text-gray-400">{user?.branchInfo}</p>
           <p className="text-sm text-gray-400">{user?.headline}</p>
         </div>
 

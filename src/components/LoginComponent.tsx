@@ -134,7 +134,7 @@ export default function LoginComponent() {
         New to AlumniConnect? 
         <span className='ml-2'>
           <Link 
-            href="/signup" 
+            href="/enrollment" 
             className='text-blue-500 hover:text-blue-400 transition duration-300 ease-in-out'
           >
             Join Now
