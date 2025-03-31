@@ -62,3 +62,13 @@ model Message {
   senderId      String @db.ObjectId
   sender        User @relation(fields: [senderId], references: [id], onDelete: Cascade)
 }
+
+model Job {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId  // MongoDB auto-generated ObjectId
+  companyName String
+  package     String
+  link        String
+  branch      String?
+  role        String?
+  lastDate    DateTime
+}

@@ -36,7 +36,8 @@ const TopBar = () => {
           <NavItem href="/home" icon={<Home className="w-6 h-6" />} label="Home" active={pathname === "/home"} />
           <NavItem href="/network" icon={<Users className="w-6 h-6" />} label="Network" active={pathname === "/network"} />
           <NavItem href="/jobs" icon={<Briefcase className="w-6 h-6" />} label="Jobs" active={pathname === "/jobs"} />
-          <NavItem href={`/${currentUser?.userId}/messages`} icon={<MessageSquare className="w-6 h-6" />} label="Messages" active={pathname === "/messages"} />
+          <NavItem href={`/${currentUser?.userId}/messages`} icon={<MessageSquare className="w-6 h-6" />} label="Messages" active={pathname === `/${currentUser?.userId}/messages`} />
+          {/* <NavItem href={`/notifications/${currentUser?.userId}`} icon={<Bell className="w-6 h-6" />} label="Notifications" active={pathname === `/notifications/${currentUser?.userId}`} /> */}
           <ProfileDrop />
         </div>
       </div>
